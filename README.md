@@ -1,6 +1,6 @@
 # Some tips from the [Rust Bytes Newsletter](https://weeklyrust.substack.com/)
 
-### ManuallyDrop + ptr::write for move out without drop patterns
+### [ManuallyDrop](https://doc.rust-lang.org/std/mem/struct.ManuallyDrop.html) + [ptr::write](https://doc.rust-lang.org/std/ptr/fn.write.html) for move out without drop patterns
 Want to move a value out of a struct without dropping the rest?
 
 Combine ManuallyDrop with ptr::read/write:
@@ -13,7 +13,7 @@ I use this constantly when implementing arenas, intrusive linked lists, or custo
 
 ---
 
-### std::ptr::addr_of! and addr_of_mut!: your new best friends for field projection
+### [std::ptr::addr_of!](https://doc.rust-lang.org/std/ptr/macro.addr_of.html) and [addr_of_mut!](https://doc.rust-lang.org/std/ptr/macro.addr_of_mut.html): your new best friends for field projection
 When you need a raw pointer to a field without going through a reference to avoid stacked borrows or temporary references, use:
 ```rust
 let ptr = std::ptr::addr_of!((*some_ptr).field);
@@ -23,7 +23,7 @@ This is UB-free in cases where &(*some_ptr).field would create illegal intermedi
 
 ---
 
-### #[track_caller] + std::panic::Location for god-tier debugging in libraries
+### [#[track_caller]](https://doc.rust-lang.org/reference/attributes/codegen.html#the-track_caller-attribute) + [std::panic::Location](https://doc.rust-lang.org/std/panic/struct.Location.html) for god-tier debugging in libraries
 Want your library’s error messages/panics/logs to point to the user’s code, not your internal helper?
 ```rust
 #[track_caller]
@@ -36,7 +36,7 @@ I put this on every public-facing helper that could fail. Makes debugging 10× n
 
 ---
 
-### Embed static data with include_str!
+### Embed static data with [include_str!](https://doc.rust-lang.org/std/macro.include_str.html)
 Need to bundle static text with your program? Use include_str! to read a file at compile time and embed it directly into the binary:
 ```rust
 fn main() {
@@ -54,7 +54,7 @@ Now you only have to write your documentation once. The same file powers your Gi
 
 ---
 
-### Prefer From/TryFrom over as
+### Prefer [From](https://doc.rust-lang.org/std/convert/trait.From.html)/[TryFrom](https://doc.rust-lang.org/std/convert/trait.TryFrom.html) over as
 Using as for numeric conversions can silently truncate values when the destination type is smaller. That’s rarely what you want.
 
 For infallible conversions, use From:
@@ -71,7 +71,7 @@ TryFrom returns a Result:Ok if the value fits, Err if it doesn’t.
 
 ---
 
-### matches! for Fast, Readable Pattern Checks
+### [matches!](https://doc.rust-lang.org/std/macro.matches.html) for Fast, Readable Pattern Checks
 matches! is a macro that evaluates to true if a value fits a given pattern. It’s essentially a compact, expression-based alternative to if let or a full match when you only care about a boolean result.
 
 Instead of writing
@@ -111,8 +111,8 @@ fn is_heavily_busy(s: &State) -> bool {
 
 ---
 
-### Const Generics for Type-Safe Matrix Operations
-Const generics enable parameterizing types with compile-time constants, such as array or matrix dimensions.
+### [Const generics](https://doc.rust-lang.org/reference/items/generics.html#const-generics) for Type-Safe Matrix Operations
+Const Generics enable parameterizing types with compile-time constants, such as array or matrix dimensions.
 
 It’s ideal for performance-critical applications like numerics, embedded systems, or games, allowing fixed-size matrices to be allocated without the overhead associated with dynamic vectors.
 ```rust
@@ -163,8 +163,8 @@ fn main() {
 
 ---
 
-### bool::then: Lazy Option Creation
-[bool::then](https://doc.rust-lang.org/std/primitive.bool.html#method.then) can be used as an alternative to if-else when building Option<T> conditionally.
+### [bool::then](https://doc.rust-lang.org/std/primitive.bool.html#method.then): Lazy Option Creation
+bool::then can be used as an alternative to if-else when building Option<T> conditionally.
 
 It’s also lazy, so the closure only runs if true, skipping all work (allocations, I/O, heavy calculations) when false.
 
