@@ -1,2 +1,1 @@
-# tips_from_rust_bytes
-Tips From Rust Bytes
+# Tips From [Rust Bytes Newsletter](https://weeklyrust.substack.com/)
