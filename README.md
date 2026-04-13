@@ -1,4 +1,4 @@
-# Tips From [Rust Bytes Newsletter](https://weeklyrust.substack.com/)
+# Some tips from the [Rust Bytes Newsletter](https://weeklyrust.substack.com/)
 
 ### ManuallyDrop + ptr::write for move out without drop patterns
 Want to move a value out of a struct without dropping the rest?
@@ -36,19 +36,6 @@ I put this on every public-facing helper that could fail. Makes debugging 10× n
 
 ---
 
-### Export commonly-used items in a prelude module
-If your crate has items that most users will need, create a prelude module to save them repetitive imports:
-```rust
-pub mod prelude {
-    pub use crate::RoastBeef;
-    pub use crate::carbs::pasta::filled::Tortelloni;
-    pub use crate::snacks::Popcorn;
-}
-```
-Now users can get your whole delicious menu delivered with just one call:
-
----
-
 ### Embed static data with include_str!
 Need to bundle static text with your program? Use include_str! to read a file at compile time and embed it directly into the binary:
 ```rust
@@ -64,3 +51,145 @@ A particularly neat trick is to reuse your README.md file as crate documentation
 #![doc = include_str!("../README.md")]
 ```
 Now you only have to write your documentation once. The same file powers your GitHub page, your cargo doc output, and your page on crates.io, including examples and doctests.
+
+---
+
+### Prefer From/TryFrom over as
+Using as for numeric conversions can silently truncate values when the destination type is smaller. That’s rarely what you want.
+
+For infallible conversions, use From:
+```rust
+let output = u64::from(input);
+```
+If this compiles, the conversion is guaranteed to be sound. Rust won’t let you accidentally convert a larger type into a smaller one.
+
+For conversions that may or may not succeed depending on the value, use TryFrom:
+```rust
+if let Ok(output) = u8::try_from(input) {}
+```
+TryFrom returns a Result:Ok if the value fits, Err if it doesn’t.
+
+---
+
+### matches! for Fast, Readable Pattern Checks
+matches! is a macro that evaluates to true if a value fits a given pattern. It’s essentially a compact, expression-based alternative to if let or a full match when you only care about a boolean result.
+
+Instead of writing
+```rust
+enum State {
+    Ready,
+    Busy(u32)
+}
+
+fn is_busy(s: &State) -> bool {
+    if let State::Busy(_) = s {
+        true
+    } else {
+        false
+    }
+}
+```
+
+You write
+```rust
+enum State {
+    Ready,
+    Busy(u32)
+}
+
+fn is_busy_with_matches(s: &State) -> bool {
+    matches!(s, State::Busy(_))
+}
+```
+
+It also supports guards for additional constraints.
+```rust
+fn is_heavily_busy(s: &State) -> bool {
+    matches!(s, State::Busy(n) if n > 10)
+}
+```
+
+---
+
+### Const Generics for Type-Safe Matrix Operations
+Const generics enable parameterizing types with compile-time constants, such as array or matrix dimensions.
+
+It’s ideal for performance-critical applications like numerics, embedded systems, or games, allowing fixed-size matrices to be allocated without the overhead associated with dynamic vectors.
+```rust
+#[derive(Clone, Copy)]
+struct Matrix<const ROWS: usize, const COLS: usize> {
+    data: [[f32; COLS]; ROWS],
+}
+
+impl<const ROWS: usize, const COLS: usize> Matrix<ROWS, COLS> {
+    fn zero() -> Self {
+        Matrix {
+            data: [[0.0; COLS]; ROWS],
+        }
+    }
+}
+
+fn add<const ROWS: usize, const COLS: usize>(
+    a: &Matrix<ROWS, COLS>,
+    b: &Matrix<ROWS, COLS>,
+) -> Matrix<ROWS, COLS> {
+    let mut result = Matrix::zero();
+    for i in 0..ROWS {
+        for j in 0..COLS {
+            result.data[i][j] = a.data[i][j] + b.data[i][j];
+        }
+    }
+    result
+}
+
+fn main() {
+    let mat1: Matrix<2, 2> = Matrix {
+        data: [[1.0, 2.0], [3.0, 4.0]],
+    };
+    let mat2: Matrix<2, 2> = Matrix {
+        data: [[5.0, 6.0], [7.0, 8.0]],
+    };
+
+    let sum = add(&mat1, &mat2);
+
+    println!("Matrix 1: {:?}", mat1.data);
+    println!("Matrix 2: {:?}", mat2.data);
+    println!("Sum: {:?}", sum.data);
+
+    // Access an element
+    println!("Element at [1][1] in sum: {}", sum.data[1][1]); // 12.0
+}
+```
+
+---
+
+### bool::then: Lazy Option Creation
+[bool::then](https://doc.rust-lang.org/std/primitive.bool.html#method.then) can be used as an alternative to if-else when building Option<T> conditionally.
+
+It’s also lazy, so the closure only runs if true, skipping all work (allocations, I/O, heavy calculations) when false.
+
+Instead of writing
+```rust
+fn main() {
+    let verbose_a = true;
+
+    let log_prefix_a: Option<String> = if verbose_a {
+        Some("[DEBUG]".to_string())
+    } else {
+        None
+    };
+
+    println!("if-else result: {:?}", log_prefix_a); // Some("[DEBUG]")
+```
+
+You write
+```rust
+    let verbose_b = true;
+
+    let log_prefix_b: Option<String> = verbose_b.then(|| {
+        "[DEBUG]".to_string() // Closure runs ONLY if true – zero cost otherwise
+    });
+
+    println!(".then result:  {:?}", log_prefix_b); // Some("[DEBUG]")
+}
+```
