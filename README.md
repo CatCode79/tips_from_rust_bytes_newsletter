@@ -12,7 +12,7 @@ pub struct Handle(NonZeroU32);
 pub struct Opaque(*mut c_void);
 ```
 
-You can play around with the code on  [Rust Playground](https://play.rust-lang.org/?version=stable&mode=debug&edition=2024&gist=3a836c1f1ce6eb235e0cec015d4a5f48)
+You can play around with the code on  [Rust Playground](https://play.rust-lang.org/?version=stable&mode=debug&edition=2024&gist=3a836c1f1ce6eb235e0cec015d4a5f48).
 
 ---
 
@@ -32,7 +32,7 @@ I use this constantly when implementing arenas, intrusive linked lists, or custo
 
 ---
 
-### [std::ptr::addr_of!](https://doc.rust-lang.org/std/ptr/macro.addr_of.html) and [addr_of_mut!](https://doc.rust-lang.org/std/ptr/macro.addr_of_mut.html): your new best friends for field projection
+### [std::ptr::addr_of!](https://doc.rust-lang.org/std/ptr/macro.addr_of.html) and [addr_of_mut!](https://doc.rust-lang.org/std/ptr/macro.addr_of_mut.html): your new best friends for [field projection](https://github.com/BennoLossin/rfcs/blob/field-projection-v2/text/3735-field-projections.md)
 
 When you need a raw pointer to a field without going through a reference to avoid stacked borrows or temporary references, use:
 
@@ -84,7 +84,7 @@ Now you only have to write your documentation once. The same file powers your Gi
 
 ---
 
-### Prefer [From](https://doc.rust-lang.org/std/convert/trait.From.html)/[TryFrom](https://doc.rust-lang.org/std/convert/trait.TryFrom.html) over as
+### Prefer [From](https://doc.rust-lang.org/std/convert/trait.From.html)/[TryFrom](https://doc.rust-lang.org/std/convert/trait.TryFrom.html) over [as](https://doc.rust-lang.org/std/keyword.as.html)
 
 Using as for numeric conversions can silently truncate values when the destination type is smaller. That’s rarely what you want.
 
