@@ -16,7 +16,7 @@ You can play around with the code on  [Rust Playground](https://play.rust-lang.o
 
 ---
 
-### [ManuallyDrop](https://doc.rust-lang.org/std/mem/struct.ManuallyDrop.html) + [ptr::write](https://doc.rust-lang.org/std/ptr/fn.write.html) for move out without [drop](https://doc.rust-lang.org/rust-by-example/trait/drop.html) patterns
+### [ManuallyDrop](https://doc.rust-lang.org/std/mem/struct.ManuallyDrop.html) + [ptr::write](https://doc.rust-lang.org/std/ptr/fn.write.html) for move out without [dro](https://doc.rust-lang.org/rust-by-example/trait/drop.html)p [patterns](https://rust-unofficial.github.io/patterns/idioms/dtor-finally.html)
 
 Want to move a value out of a struct without dropping the rest?
 
