@@ -1,6 +1,6 @@
 # Tips from the [Rust Bytes Newsletter](https://weeklyrust.substack.com/)
 
-### [#[repr(transparent)]](https://doc.rust-lang.org/nomicon/other-reprs.html#reprtransparent) + [#[repr(C)]](https://doc.rust-lang.org/nomicon/other-reprs.html#reprc) for [newtype](https://doc.rust-lang.org/rust-by-example/generics/new_types.html) [FFI](https://doc.rust-lang.org/nomicon/ffi.html) safety
+### [#[repr(transparent)]](https://doc.rust-lang.org/nomicon/other-reprs.html#reprtransparent) + [#[repr(C)]](https://doc.rust-lang.org/nomicon/other-reprs.html#reprc) for [newtyp](https://doc.rust-lang.org/rust-by-example/generics/new_types.html)e [FFI](https://doc.rust-lang.org/nomicon/ffi.html) safety
 
 This guarantees the layout is exactly the same as the inner type, lets you do transmute-free conversions, and is the idiomatic way to wrap raw handles/pointers.
 
