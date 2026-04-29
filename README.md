@@ -1,5 +1,18 @@
 # Tips from the [Rust Bytes Newsletter](https://weeklyrust.substack.com/)
 
+### Index of Tips
+- [#[repr(transparent)] + #[repr(C)] for newtype FFI safety](https://github.com/CatCode79/tips_from_rust_bytes_newsletter#reprtransparent--reprc-for-newtype-ffi-safety)
+- [ManuallyDrop + ptr::write for move out without drop patterns](https://github.com/CatCode79/tips_from_rust_bytes_newsletter#manuallydrop--ptrwrite-for-move-out-without-drop-patterns)
+- [std::ptr::addr_of! and addr_of_mut!: your new best friends for field projection](https://github.com/CatCode79/tips_from_rust_bytes_newsletter#stdptraddr_of-and-addr_of_mut-your-new-best-friends-for-field-projection)
+- [#[track_caller] + std::panic::Location for god-tier debugging in libraries](https://github.com/CatCode79/tips_from_rust_bytes_newsletter#track_caller--stdpaniclocation-for-god-tier-debugging-in-libraries)
+- [Embed static data with include_str!](https://github.com/CatCode79/tips_from_rust_bytes_newsletter#embed-static-data-with-include_str)
+- [Prefer From/TryFrom over as](https://github.com/CatCode79/tips_from_rust_bytes_newsletter#prefer-fromtryfrom-over-as)
+- [matches! for Fast, Readable Pattern Checks](https://github.com/CatCode79/tips_from_rust_bytes_newsletter#matches-for-fast-readable-pattern-checks)
+- [Const generics for Type-Safe Matrix Operations](https://github.com/CatCode79/tips_from_rust_bytes_newsletter#const-generics-for-type-safe-matrix-operations)
+- [bool::then: Lazy Option Creation](https://github.com/CatCode79/tips_from_rust_bytes_newsletter#boolthen-lazy-option-creation)
+
+---
+
 ### [#[repr(transparent)]](https://doc.rust-lang.org/nomicon/other-reprs.html#reprtransparent) + [#[repr(C)]](https://doc.rust-lang.org/nomicon/other-reprs.html#reprc) for [newtyp](https://doc.rust-lang.org/rust-by-example/generics/new_types.html)e [FFI](https://doc.rust-lang.org/nomicon/ffi.html) safety
 
 This guarantees the layout is exactly the same as the inner type, lets you do transmute-free conversions, and is the idiomatic way to wrap raw handles/pointers.
